@@ -1,0 +1,16 @@
+evaluate==0.4.0
+nltk==3.8.1
+notebook==6.5.2
+numpy==1.23.5
+pandas==1.5.2
+python==3.10.8
+pytorch-lightning==1.8.1
+pytorch==1.13.1
+rich==12.5.1
+kss==4.4.0
+scikit-learn==1.2.0
+selenium==3.141.0
+sentence-transformers==2.2.2
+sentencepiece==0.1.97
+soynlp==0.0.493
+transformers==4.24.0
