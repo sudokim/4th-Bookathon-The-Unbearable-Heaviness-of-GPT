@@ -13,13 +13,13 @@ from src.keywords import extract_keywords
 # from src.utils import request_log
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--checkpoint", type=str, required=True)
-parser.add_argument("--draft", type=str, default=None)
-parser.add_argument("--max_length", type=int, default=384)
-parser.add_argument("--fp32", action="store_true", default=False)
-parser.add_argument("--device", type=str, default="cuda")
-parser.add_argument("--num_last_sentences", type=int, default=2)
-parser.add_argument("--penalty_alpha", type=float, default=0.6)
+parser.add_argument("--checkpoint", type=str, required=True, help="Path to model checkpoint")
+parser.add_argument("--draft", type=str, default=None, help="Path to draft directory")
+parser.add_argument("--max_length", type=int, default=384, help="Maximum length of generated text")
+parser.add_argument("--fp32", action="store_true", default=False, help="Use 32-bit floating point precision")
+parser.add_argument("--device", type=str, default="cuda", help="Device to use for inference")
+parser.add_argument("--num_last_sentences", type=int, default=2, help="Number of last sentences to use as prompt")
+parser.add_argument("--penalty_alpha", type=float, default=0.6, help="Penalty alpha for contrastive search")
 
 
 def main():

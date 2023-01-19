@@ -20,43 +20,49 @@ logging.basicConfig(level=logging.INFO)
 parser = argparse.ArgumentParser()
 
 # Paths
-parser.add_argument("--checkpoint", type=str, default=None)
-parser.add_argument("--checkpoint_path", type=str, default="./checkpoints")
-parser.add_argument("--dataset_path", type=str, default="./data")
+parser.add_argument("--checkpoint", type=str, default=None, help="Path to previously trained model")
+parser.add_argument("--checkpoint_path", type=str, default="./checkpoints", help="Path to checkpoint directory")
+parser.add_argument("--dataset_path", type=str, default="./data", help="Path to dataset directory")
 
-parser.add_argument("--datamodule", type=str, required=True)
+parser.add_argument("--datamodule", type=str, required=True, help="Datamodule to use",
+                    choices=["vanilla", "sliding_window", "keywords", "input_target"])
 
 # Length constraints
-parser.add_argument("--max_length", type=int, default=1024)
+parser.add_argument("--max_length", type=int, default=1024, help="Maximum length of tokens")
 
 # Sliding window
-parser.add_argument("--sw_sentences", type=int, default=6)
-parser.add_argument("--sw_step", type=int, default=4)
+parser.add_argument("--sw_sentences", type=int, default=6, help="Number of sentences in sliding window")
+parser.add_argument("--sw_step", type=int, default=4, help="Step size of sliding window")
 
 # Keyword
-parser.add_argument("--input_loss", action="store_true")
-parser.add_argument("--train_sep_token", action="store_true")
+parser.add_argument("--input_loss", action="store_true", help="Calculate input prompt loss")
+parser.add_argument("--train_sep_token", action="store_true",
+                    help="Train the separator token separating the keywords and the input prompt")
 
 # Input/target
-parser.add_argument("--input_target", action="store_true")
-parser.add_argument("--num_input_sentences", type=int, default=3)
+parser.add_argument("--input_target", action="store_true", help="Use input/target in keywords datamodule")
+parser.add_argument("--num_input_sentences", type=int, default=3, help="Number of input sentences")
 
 # Training
-parser.add_argument("--batch_size", type=int, default=8)
-parser.add_argument("--lr", type=float, default=1e-4)
-parser.add_argument("--dataloader_num_workers", type=int, default=4)
-parser.add_argument("--max_epochs", type=int, default=100)
-parser.add_argument("--seed", type=int, default=42)
-parser.add_argument("--fp32", action="store_true")
-parser.add_argument("--bf16", action="store_true")
-parser.add_argument("--accelerator", type=str, default="gpu")
-parser.add_argument("--devices", type=int, default=1)
-parser.add_argument("--strategy", type=str, default=None)
-parser.add_argument("--gradient_accumulation", type=int, default=8)
+parser.add_argument("--batch_size", type=int, default=8, help="Batch size")
+parser.add_argument("--lr", type=float, default=1e-4, help="Learning rate")
+parser.add_argument("--dataloader_num_workers", type=int, default=4, help="Number of dataloader workers")
+parser.add_argument("--max_epochs", type=int, default=100, help="Maximum number of epochs")
+parser.add_argument("--seed", type=int, default=42, help="Random seed")
+parser.add_argument("--fp32", action="store_true", help="Use 32-bit floating point precision")
+parser.add_argument("--bf16", action="store_true", help="Use bf16 floating point precision")
+parser.add_argument("--accelerator", type=str, default="gpu", help="Accelerator to use")
+parser.add_argument("--devices", type=int, default=1, help="Number of devices to use")
+parser.add_argument("--strategy", type=str, default=None, help="Strategy to use")
+parser.add_argument("--gradient_accumulation", type=int, default=8, help="Number of gradient accumulation steps")
 
 
 def main():
     args = parser.parse_args()
+
+    if args.datamodule != args.keywords and args.input_target:
+        raise ValueError("input_target argument is only supported in keywords datamodule. "
+                         "Use --datamodule input_target to train with input/target without keywords.")
 
     # Save arguments to file
     args_file_name = f"{args.checkpoint_path}/{int(time())}.txt"

@@ -7,10 +7,10 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 # from src.utils import request_log
 
 parser = argparse.ArgumentParser()
-parser.add_argument("--checkpoint", type=str, default=None)
-parser.add_argument("--max_length", type=int, default=1024)
-parser.add_argument("--fp32", action="store_true", default=False)
-parser.add_argument("--device", type=str, default="cuda")
+parser.add_argument("--checkpoint", type=str, default=None, help="Path to model checkpoint")
+parser.add_argument("--max_length", type=int, default=1024, help="Maximum length of generated text")
+parser.add_argument("--fp32", action="store_true", default=False, help="Use 32-bit floating point precision")
+parser.add_argument("--device", type=str, default="cuda", help="Device to use for inference")
 
 
 def main():
